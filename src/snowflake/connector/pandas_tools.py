@@ -161,7 +161,7 @@ def write_pandas(conn: 'SnowflakeConnection',
     cursor.close()
     return (all(e[1] == 'LOADED' for e in copy_results),
             len(copy_results),
-            sum(e[3] for e in copy_results),
+            sum(int(e[3]) for e in copy_results),
             copy_results)
 
 
