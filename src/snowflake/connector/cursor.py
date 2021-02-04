@@ -564,7 +564,6 @@ class SnowflakeCursor(object):
             logger.debug('SUCCESS')
             data = ret['data']
 
-            # logger.debug(ret)
             logger.debug("PUT OR GET: %s", self.is_file_transfer)
             if self.is_file_transfer:
                 sf_file_transfer_agent = SnowflakeFileTransferAgent(
@@ -577,7 +576,9 @@ class SnowflakeCursor(object):
                     get_callback_output_stream=_get_callback_output_stream,
                     show_progress_bar=_show_progress_bar,
                     raise_put_get_error=_raise_put_get_error,
-                    force_put_overwrite=_force_put_overwrite or data.get('overwrite', False))
+                    force_put_overwrite=_force_put_overwrite or data.get('overwrite', False),
+                    multipart_threshold=data.get('threshold'),
+                )
                 sf_file_transfer_agent.execute()
                 data = sf_file_transfer_agent.result()
                 self._total_rowcount = len(data['rowset']) if \
