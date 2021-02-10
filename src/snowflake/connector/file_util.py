@@ -11,6 +11,7 @@ import shutil
 import struct
 from io import open
 from logging import getLogger
+from typing import Tuple
 
 from Cryptodome.Hash import SHA256
 from cryptography.hazmat.backends import default_backend
@@ -82,7 +83,7 @@ class SnowflakeFileUtil(object):
                     byte = f.read(1)
 
     @staticmethod
-    def get_digest_and_size_for_file(file_name):
+    def get_digest_and_size_for_file(file_name: str) -> Tuple[str, int]:
         """Gets file digest and size.
 
         Args:
