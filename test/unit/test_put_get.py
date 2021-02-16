@@ -11,7 +11,11 @@ from mock import MagicMock
 
 from snowflake.connector.compat import IS_WINDOWS
 from snowflake.connector.errors import Error
-from snowflake.connector.file_transfer_agent import SnowflakeFileTransferAgent
+from snowflake.connector.file_transfer_agent import (
+    SnowflakeAzureProgressPercentage,
+    SnowflakeFileTransferAgent,
+    SnowflakeS3ProgressPercentage,
+)
 
 
 @pytest.mark.skipif(IS_WINDOWS, reason='permission model is different')
@@ -74,3 +78,16 @@ def test_put_error(tmpdir):
         sf_file_transfer_agent.result()
 
     chmod(file1, 0o700)
+
+
+def test_percentage(tmpdir):
+    """Tests for raise_put_get_error flag (now turned on by default) in SnowflakeFileTransferAgent."""
+    tmp_dir = str(tmpdir.mkdir('putfiledir'))
+    file_name = path.join(tmp_dir, 'zero_file1')
+    from pathlib import Path
+    Path(file_name).touch()
+    func_callback = SnowflakeS3ProgressPercentage(file_name, 0)
+    func_callback(1)
+
+    func_callback = SnowflakeAzureProgressPercentage(file_name, 0)
+    func_callback(1)
